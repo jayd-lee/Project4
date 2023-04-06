@@ -3,5 +3,9 @@ public class project4 {
         System.out.println("dhansuh");
         System.out.printf("daighdiwopghawioeghewaio");
 
+        System.out.printf("daighdiwopghawioeghewaio");
+        System.out.printf("daighdiwopghawioeghewaio");
+        System.out.printf("daighdiwopghawioeghewaio");
+
     }
 }
