@@ -4,5 +4,6 @@ public class project4 {
         System.out.printf("daighdiwopghawioeghewaio");
         System.out.printf("daighdiwopghawioeghewaio");
         System.out.printf("daighdiwopghawioeghewaio");
+        System.out.printf("daighdiwopghawioeghewaio");
     }
 }
