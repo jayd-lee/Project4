@@ -1,0 +1,36 @@
+import java.util.*;
+
+public class BlockedUser extends User {
+    private ArrayList<User> blockedUsers;
+    private ArrayList<User> invisibleUsers;
+
+    public BlockedUser(String name, String password, String email) {
+        super(name, password, email);
+        blockedUsers = new ArrayList<User>();
+        invisibleUsers = new ArrayList<User>();
+    }
+
+    public void blocked(User users) {
+        blockedUsers.add(users);
+    }
+
+    public void invisible(User users) {
+        invisibleUsers.add(users);
+    }
+
+    public boolean isBlocked(User users) {
+        return blockedUsers.contains(users);
+    }
+
+    public boolean isInvisible(User users) {
+        return invisibleUsers.contains(users);
+    }
+
+    public ArrayList<User> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public ArrayList<User> getInvisibleUsers() {
+        return invisibleUsers;
+    }
+}
