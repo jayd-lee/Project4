@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Messages {
-    private ArrayList<String> messages;
+    private ArrayList<String> messages = new ArrayList<String>();
     public Messages() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File("src/messages.txt")));
@@ -20,11 +20,13 @@ public class Messages {
     }
     public void writeMessages(ArrayList<String> messagesNew) {
         try{
-            FileWriter fw = new FileWriter(new File("src/messages.txt"));
+            FileWriter fw = new FileWriter("src/messages.txt");
             PrintWriter pw = new PrintWriter(fw);
-            for(int x = 0; x < messagesNew.size(); x++) {
-                pw.println(messages.get(x));
+
+            for(String message : messagesNew) {
+                pw.println(message);
             }
+            pw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
