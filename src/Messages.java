@@ -5,7 +5,7 @@ public class Messages {
     private ArrayList<String> messages;
     public Messages() {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(new File("messages.txt")));
+            BufferedReader br = new BufferedReader(new FileReader(new File("src/messages.txt")));
             String line = br.readLine();
             while(line != null) {
                 messages.add(line);
@@ -20,7 +20,7 @@ public class Messages {
     }
     public void writeMessages(ArrayList<String> messagesNew) {
         try{
-            FileWriter fw = new FileWriter(new File("messages.txt"));
+            FileWriter fw = new FileWriter(new File("src/messages.txt"));
             PrintWriter pw = new PrintWriter(fw);
             for(int x = 0; x < messagesNew.size(); x++) {
                 pw.println(messages.get(x));

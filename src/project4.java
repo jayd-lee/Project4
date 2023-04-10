@@ -8,12 +8,18 @@ import java.util.ArrayList;
 
 
 public class project4 {
-
     static Scanner scan = new Scanner(System.in);
-    private static ArrayList<String> messageList;
-    private static ArrayList<String> storeList;
-    private static ArrayList<String> sellerList;
-    private static ArrayList<String> customerList;
+    private static ArrayList<String> messageList = new ArrayList<String>();
+    private static ArrayList<String> storeList = new ArrayList<String>();
+    private static ArrayList<String> sellerList = new ArrayList<String>();
+    private static ArrayList<String> customerList = new ArrayList<String>();
+    private static ArrayList<String> invisibleToList = new ArrayList<String>();
+
+    private static ArrayList<String> invisibleByList = new ArrayList<String>();
+    private static ArrayList<String> blockedList = new ArrayList<String>();
+
+    private static ArrayList<String> blockedMeList = new ArrayList<String>();
+
 
     public static User user;
     private static boolean isSeller;
@@ -68,43 +74,282 @@ public class project4 {
         Seller seller = new Seller();
         sellerList = seller.getSeller();
 
+        Stores store = new Stores();
+        storeList = store.getStores();
 
-
-        String store = null;
+        String storeName = null;
         String sell = null;
         String cust = null;
-
+        boolean invalid = false;
         if (isSeller) {
-            System.out.println("Choose an option");
-            System.out.println("1. List customers to contact");
-            System.out.println("2. Search customer");
+            int size = (messageList != null) ? messageList.size() : 0;
+            for(int x = 0; x < size; x++) {
 
-            choice = scan.nextLine();
+            /*
+            0. Sender
+            1. Receiver
+            2. TimeStamp
+            3. Message
+            4. Sender blocks receiver
+            5. Receiver blocks sender
+            6. Sender invisible to receiver
+            7. Receiver invisible to sender
+             */
+                String[] line = messageList.get(x).split(",");
 
+                if ((line[0].trim().equals(user.getName())) || (line[1].trim().equals(user.getName()))) {
+                    if (line[0].equals(user.getName())) {
 
-            if (choice.equals("1")) {
-                for (int i = 0; i < customerList.size(); i++) {
-                    System.out.println(i + ": " + customerList.get(i));
-                }
-                choice = scan.nextLine();
-                int index = Integer.parseInt(choice);
-                cust = customerList.get(index);
+                        if (line[4].equals("true")) {
+                            blockedList.add(line[1]);
+                            //Added the receiver to blocked list to indicate that I blocked the receiver
+                        }
 
-            } else if (choice.equals("2")) {
+                        if (line[6].equals("true")) {
+                            invisibleToList.add(line[1]);
+                            // Added the receiver to invisible list to indicate that I am invisible to the receiver
+                        }
 
-                while (true) {
-                    System.out.println("Enter customer name: ");
-                    cust = scan.nextLine();
-                    if (customerList.contains(cust)) {
-                        System.out.println("Customer found");
-                        break;
                     } else {
-                        System.out.println("Customer not found, try again");
+                        if (line[4].equals("true")) {
+                            blockedMeList.add(line[0]);
+                            //Added the sender to blocked me list to indicate that I am blocked by the sender
+                        }
+
+                        if (line[7].equals("true")) {
+                            invisibleByList.add(line[0]);
+                            // Added the sender to invisible list to indicate that the sender is invisible to me
+                        }
                     }
                 }
             }
 
+
+
+            do {
+                System.out.println("Choose an option");
+                System.out.println("1. List customers to contact");
+                System.out.println("2. Search customer");
+                System.out.println("3. Add store");
+                choice = scan.nextLine();
+                if (choice.equals("1")) {
+                    size = (customerList != null) ? customerList.size() : 0;
+                    if (size == 0) {
+                        System.out.println("No customers found");
+                        invalid = true;
+                    }
+
+                    for (int i = 0; i < size; i++) {
+                        if (!invisibleByList.contains(customerList.get(i))) {
+                            System.out.println((i+1) + ": " + customerList.get(i));
+                            invalid = false;
+                        }
+                    }
+                    choice = scan.nextLine();
+                    int index = Integer.parseInt(choice);
+                    cust = customerList.get(index-1);
+
+
+
+                } else if (choice.equals("2")) {
+
+                    while (true) {
+                        System.out.println("Enter customer name: ");
+                        cust = scan.nextLine();
+                        if ((customerList.contains(cust)) && (!invisibleByList.contains(cust))) {
+                            System.out.println("Customer found");
+
+                            if (blockedMeList.contains(cust)) {
+                                System.out.println("This customer blocked you. " +
+                                        "You cannot send messages to this customer, choose another customer");
+                            } else {
+                                break;
+                            }
+
+                        } else {
+                            System.out.println("Customer not found, try again");
+                        }
+                    }
+                    invalid = false;
+                } else if (choice.equals("3")) {
+                    System.out.println("Enter store name: ");
+                    String newStore = scan.nextLine();
+                    storeList.add(newStore + "," + user.getName());
+                    store.writeStores(storeList);
+                    invalid = true;
+                    System.out.println("Store added!");
+                } else {
+                    invalid = true;
+                    System.out.println("Invalid option.");
+                }
+            } while (invalid);
+
+            if (blockedList.contains(cust)) {
+                System.out.println("You blocked this customer, you can still view, send, " +
+                        "edit messages but they will not be able to see your messages.");
+            }
+
+
+
+            if (invisibleToList.contains(cust)) {
+                System.out.println("You are invisible to this customer, you can still view, send, " +
+                        "edit messages but they will not be able to see your messages.");
+            }
+
+
+            size = (messageList != null) ? messageList.size() : 0;
+            for(int x = 0; x < size; x++) {
+                if(messageList.get(x).contains(cust) && messageList.get(x).contains(user.getName())) {
+                    String[] line = messageList.get(x).split(",");
+                    String send = line[0].trim();
+                    String receive = line[1].trim();
+                    String time = line[2].trim();
+                    String mess = line[3].trim();
+                    System.out.println("Time: " + time + "    " + send + ": " + message);
+                }
+            }
+
+
+            switch (choice) {
+                case "1":
+                    // Write message in the format of
+                    // (Sender, Receiver, TimeStamp, Message, false, false, false, false)
+                    messageList.add(user.getName() + "," + cust + "," + System.currentTimeMillis() + "," + message +
+                            ",false,false,false,false");
+                    break;
+                case "2":
+                    // enter the specific message you want to edit, and the new message
+                    // Have to go through a for loop, until the message is found && the sender is the user
+                    // otherwise, print out "choose a valid message to edit"
+                    size = (messageList != null) ? messageList.size() : 0;
+                    for (int i = 0; i < size; i++) {
+                        System.out.println("Enter the message you want to edit: ");
+                        String edit = scan.nextLine();
+                        String[] messageToEdit = messageList.get(i).split(",");
+                        if (messageToEdit[3].equals(edit)
+                                && messageToEdit[0].equals(user.getName()) && messageToEdit[1] == cust) {
+                            System.out.println("Enter the new message: ");
+                            String newMessage = scan.nextLine();
+                            String newLine = messageToEdit[0] + "," + messageToEdit[1] + "," +
+                                    messageToEdit[2] + "," + newMessage + "," + messageToEdit[4] + "," +
+                                    messageToEdit[5] + "," + messageToEdit[6] + "," + messageToEdit[7];
+
+                            messageList.set(i, newLine);
+                        }
+                    }
+                    //after the for loop, update the Message.txt file with the new messageList
+
+                    break;
+                case "3":
+                    // enter the specific message you want to delete
+                    // Have to go through a for loop, until the message is found && the sender is the user
+                    // otherwise, print out "choose a valid message to delete"
+                    System.out.println("Enter the message you want to delete: ");
+                    String delete = scan.nextLine();
+                    size = (messageList != null) ? messageList.size() : 0;
+                    for (int i = 0; i < size; i++) {
+                        String[] messageToEdit = messageList.get(i).split(",");
+                        if (messageToEdit[3].equals(delete)
+                                && messageToEdit[0].equals(user.getName()) && messageToEdit[1].equals(cust)) {
+                            messageList.remove(i);
+                            break;
+                        }
+                    }
+                    //after the for loop, update the Message.txt file with the new messageList
+
+                    break;
+                case "4":
+
+                    // Have to go through a for loop through messageList, and turn the
+                    // (4th index to true (Sender blocks receiver) if the user is the sender)
+                    size = (messageList != null) ? messageList.size() : 0;
+                    for (int i = 0; i < size; i++) {
+                        String[] messageToEdit = messageList.get(i).split(",");
+                        if (messageToEdit[0].equals(user.getName()) && messageToEdit[1].equals(cust)) {
+                            String newLine = messageToEdit[0] + "," + messageToEdit[1] + "," +
+                                    messageToEdit[2] + "," + messageToEdit[3] + "," + "true" + "," +
+                                    messageToEdit[5] + "," + messageToEdit[6] + "," + messageToEdit[7];
+                            messageList.set(i, newLine);
+                        }
+
+                        if (messageToEdit[1].equals(user.getName()) && messageToEdit[0].equals(cust)) {
+                            String newLine = messageToEdit[0] + "," + messageToEdit[1] + "," +
+                                    messageToEdit[2] + "," + messageToEdit[3] + "," + messageToEdit[4] + "," +
+                                    "true" + "," + messageToEdit[6] + "," + messageToEdit[7];
+                            messageList.set(i, newLine);
+                        }
+                    }
+
+                    break;
+                case "5":
+                    // Have to go through a for loop, and turn the
+                    // (6th index to true (Sender invisible to receiver) if the user is the sender)
+                    // (7th index to true (Receiver invisible to sender) if the user is the receiver)
+                    size = (messageList != null) ? messageList.size() : 0;
+                    for (int i = 0; i < messageList.size(); i++) {
+                        String[] messageToEdit = messageList.get(i).split(",");
+                        if (messageToEdit[0].equals(user.getName()) && messageToEdit[1].equals(cust)) {
+                            String newLine = messageToEdit[0] + "," + messageToEdit[1] + "," +
+                                    messageToEdit[2] + "," + messageToEdit[3] + "," + messageToEdit[4] + "," +
+                                    messageToEdit[5] + "," + "true" + "," + messageToEdit[7];
+                            messageList.set(i, newLine);
+                        }
+
+                        if (messageToEdit[1].equals(user.getName()) && messageToEdit[0].equals(cust)) {
+                            String newLine = messageToEdit[0] + "," + messageToEdit[1] + "," +
+                                    messageToEdit[2] + "," + messageToEdit[3] + "," + messageToEdit[4] + "," +
+                                    messageToEdit[5] + "," + messageToEdit[6] + "," + "true";
+                            messageList.set(i, newLine);
+                        }
+                    }
+                    break;
+            }
+
+
+
+            /* CUSTOMER OPTIONS */
         } else {
+            int size = (messageList != null) ? messageList.size() : 0;
+            for(int x = 0; x < size; x++) {
+            /*
+            0. Sender
+            1. Receiver
+            2. TimeStamp
+            3. Message
+            4. Sender blocks receiver
+            5. Receiver blocks sender
+            6. Sender invisible to receiver
+            7. Receiver invisible to sender
+             */
+                String[] line = messageList.get(x).split(",");
+
+                if ((line[0].trim().equals(user.getName())) || (line[1].trim().equals(user.getName()))) {
+                    if (line[0].equals(user.getName())) {
+
+                        if (line[4].equals("true")) {
+                            blockedList.add(line[1]);
+                            //Added the receiver to blocked list
+                        }
+
+                        if (line[5].equals("true")) {
+                            blockedMeList.add(line[1]);
+                            //Added receiver to blocked me list to indicate that I am blocked by the receiver
+                        }
+
+                        if (line[6].equals("true")) {
+                            invisibleToList.add(line[1]);
+                            // Added the receiver to invisible list to indicate that I am invisible to the receiver
+                        }
+
+                        if (line[7].equals("true")) {
+                            invisibleByList.add(line[1]);
+                            // Added the receiver to invisible by list to indicate that the receiver is invisible to me
+                        }
+                    }
+                }
+
+            }
+
             System.out.println("Choose an option");
             System.out.println("1. List the stores");
             System.out.println("2. Search customer");
@@ -112,18 +357,19 @@ public class project4 {
 
 
             if (choice.equals("1")) {
-                for (int i = 0; i < sellerList.size(); i++) {
+                size = (sellerList != null) ? sellerList.size() : 0;
+                for (int i = 0; i < size; i++) {
                     System.out.println(i + ": " + sellerList.get(i));
                 }
                 choice = scan.nextLine();
                 int index = Integer.parseInt(choice);
-                store = sellerList.get(index);
+                storeName = sellerList.get(index);
 
             } else if (choice.equals("2")) {
                 while (true) {
                     System.out.println("Enter seller name: ");
                     sell = scan.nextLine();
-                    if (sellerList.contains(seller)) {
+                    if ((sellerList.contains(sell)) && (!invisibleByList.contains(sell))) {
                         System.out.println("Seller found");
                         break;
                     } else {
@@ -131,11 +377,77 @@ public class project4 {
                     }
                 }
             }
+
+            if (blockedList.contains(sell)) {
+                System.out.println("You blocked this seller, you can still view, send, " +
+                        "edit messages but they will not be able to see your messages.");
+            }
+
+            if (blockedMeList.contains(sell)) {
+                System.out.println("This seller blocked you. You cannot send messages to this customer.");
+                // write to go back to choosing the seller
+            }
+
+            if (invisibleToList.contains(sell)) {
+                System.out.println("You are invisible to this seller, you can still view, send, " +
+                        "edit messages but they will not be able to see your messages.");
+            }
+
+
+            System.out.println("Message History:");
+            size = (messageList != null) ? messageList.size() : 0;
+            for(int x = 0; x < size; x++) {
+                if(messageList.get(x).contains(sell) && messageList.get(x).contains(user.getName())) {
+                    String[] line = messageList.get(x).split(",");
+                    String send = line[0].trim();
+                    String receive = line[1].trim();
+                    String time = line[2].trim();
+                    String mess = line[3].trim();
+                    System.out.println("Time: " + time + "    " + send + ": " + mess);
+                }
+            }
+
+
+            System.out.println("Choose an option");
+            System.out.println("1. Write messages");
+            System.out.println("2. Edit");
+            System.out.println("3. Delete");
+            System.out.println("4. Block");
+            System.out.println("5. Invisible");
+            choice = scan.nextLine();
+
+            switch (choice) {
+                case "1":
+                    // Write message in the format of
+                    // (Sender, Receiver, TimeStamp, Message, false, false, false, false)
+                    break;
+                case "2":
+                    // enter the specific message you want to edit
+                    // Have to go through a for loop, until the message is found
+                    // and change the message only if the user is the sender
+                    // otherwise, print out "You cannot edit this message"
+
+                    break;
+                case "3":
+                    // enter the specific message you want to delete
+                    // Have to go through a for loop, until the message is found
+                    // and delete the message only if the user is the sender
+                    // otherwise, print out "You cannot delete this message"
+
+                    break;
+                case "4":
+                    // Have to go through a for loop, and turn the
+                    // (4th index to true (Sender blocks receiver) if the user is the sender)
+                    // (5th index to true (Receiver blocks sender) if the user is the receiver)
+
+                    break;
+                case "5":
+                    // Have to go through a for loop, and turn the
+                    // (6th index to true (Sender invisible to receiver) if the user is the sender)
+                    // (7th index to true (Receiver invisible to sender) if the user is the receiver)
+                    break;
+            }
         }
-
-
-
-
 
 
 
@@ -399,59 +711,6 @@ public class project4 {
     }
 
 
-
-    public void readStores() {
-
-    }
-    public void readSellers() {
-
-    }
-    public void readCustomers() {
-
-    }
-    public void createMessage(String sender, String receiver, String message) {
-        Timestamp ts = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String line = sender + "," + receiver + "," + sdf.format(ts) + "," + message + "," + "false";
-        messageList.add(line);
-    }
-
-    public void updateMessage(String sender, String receiver, String message, String newMessage) {
-        String[] line;
-        int index = -1;
-        for(int x = 0; x < messageList.size(); x++) {
-            line = messageList.get(x).split(",");
-            if (line[0].equalsIgnoreCase(sender) && line[1].equalsIgnoreCase(receiver) && line[3].equalsIgnoreCase(message)) {
-                index = x;
-            }
-        }
-        messageList.remove(index);
-        Timestamp ts = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String data = sender + "," + receiver + "," + sdf.format(ts) + "," + newMessage + "," + "false";
-        messageList.add(data);
-    }
-    public void deleteMessage(String sender, String receiver, String message, String newMessage) {
-        String[] line;
-        int index = -1;
-        String send = "";
-        String receive = "";
-        String time = "";
-        String mess = "";
-        for(int x = 0; x < messageList.size(); x++) {
-            line = messageList.get(x).split(",");
-            if (line[0].equalsIgnoreCase(sender) && line[1].equalsIgnoreCase(receiver) && line[3].equalsIgnoreCase(message)) {
-                index = x;
-                send = line[0];
-                receive = line[1];
-                time = line[2];
-                mess = line[3];
-            }
-        }
-        messageList.remove(index);
-        String data = send + "," + receive + "," + time + "," + mess + "," + "true";
-        messageList.add(data);
-    }
 //    public void writeMessages() {
 //        messageList.writeMessages(messageList);
 //    }
