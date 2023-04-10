@@ -23,13 +23,16 @@
 - Contains I/O for the username, password, and email to be used in the login and signup methods of our Project4 class
 - Has three methods: username, password, and email
 #### *Messages.java:* 
-- method which uses the constructor to read and add all current messages to an ArrayList. Then, there is a writeMessages method that takes in another message ArrayList in its constructor and writes it to the messages.txt file. 
+- class which uses the constructor to read and add all current messages to an ArrayList. Then, there is a writeMessages method that takes in another message ArrayList in its constructor and writes it to the messages.txt file. 
 #### *Project4.java:*
 - Class which houses our main, login, signup, create message, update message, and delete message methods. Our main class handles the vast majority of our File I/O. 
 - The login method manages the logins for both sellers and buyers, taking in the username and password and verifying accordingly. 
 - The signup method takes in a new username, password, and email and writes it to either the seller or buyer text files. 
 #### *Stores.java:*
-- method which uses the constructor to read and add all current stores to an ArrayList. Then, there is a writeStores method that takes in a newStores ArrayList in its constructor and writes each tore to the stores.txt file. 
+- class which uses the constructor to read and add all current stores to an ArrayList. Then, there is a writeStores method that takes in a newStores ArrayList in its constructor and writes each tore to the stores.txt file. 
+#### *TestCases.java:*
+- class which houses our test cases for the project
+- our project is very main-heavy, so testing is effective through the main method, but we have supplie additional test cases in this class
 #### *customer.txt:* 
 - text file which stores customers in the format: username, password, email
 - file is read from to process login/signup details for customer and is written to when a new user is created or an existing user changes their information
