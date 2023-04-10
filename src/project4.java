@@ -707,9 +707,9 @@ public class project4 {
                     String username = Tools.username();
 
                     while ((line = br.readLine()) != null) {
-                        if (line.contains(username)) {
+                        String[] details = line.split(",");
+                        if (details[0].trim().equals(username)) {
                             usernameExists = true;
-                            String[] details = line.split(",");
                             loginUsername = details[0].trim();
                             loginPassword = details[1].trim();
                             loginEmail = details[2].trim();
@@ -758,9 +758,9 @@ public class project4 {
                     String username = Tools.username();
 
                     while ((line = br.readLine()) != null) {
-                        if (line.contains(username)) {
+                        String[] details = line.split(",");
+                        if (details[0].trim().equals(username)) {
                             usernameExists = true;
-                            String[] details = line.split(",");
                             loginUsername = details[0].trim();
                             loginPassword = details[1].trim();
                             loginEmail = details[2].trim();
