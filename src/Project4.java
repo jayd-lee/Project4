@@ -9,8 +9,17 @@ import java.util.SimpleTimeZone;
 import java.util.TreeMap;
 import java.util.ArrayList;
 
-
-public class project4 {
+/**
+ * Project4.java
+ *
+ * This program runs all of the other code from other classes and creates the dashboard.
+ *
+ * @author Dhanush Manjunath, Aadi Gupta, Jayden Lee, Kylie Houston, LE2
+ *
+ * @version 4/10/23
+ *
+ */
+public class Project4 {
     static Scanner scan = new Scanner(System.in);
     private static ArrayList<String> messageList = new ArrayList<String>();
     private static ArrayList<String> storeList = new ArrayList<String>();
@@ -263,7 +272,8 @@ public class project4 {
                 int minutes = currentTime.getMinute();
                 String time = hours + ":" + minutes;
                 if (size == 0) {
-                    messageList.add(user.getName() + "," + cust + "," + time + "," + "START OF CONVO" + "," + "false," + "false," + "false," + "false");
+                    messageList.add(user.getName() + "," + cust + "," + time + "," + "START OF CONVO" + 
+                                    "," + "false," + "false," + "false," + "false");
                     message.writeMessages(messageList);
                 }
                 for (int x = 0; x < size; x++) {
@@ -400,7 +410,8 @@ public class project4 {
                             if (messageToEdit[1].equals(user.getName()) && messageToEdit[0].equals(cust)) {
                                 String newLine = messageToEdit[0] + "," + messageToEdit[1] + "," +
                                         messageToEdit[2] + "," + messageToEdit[3] + "," + messageToEdit[4] + "," +
-                                        messageToEdit[5] + "," + messageToEdit[6] + "," + "true" + "," + messageToEdit[7];
+                                        messageToEdit[5] + "," + messageToEdit[6] + "," + "true" + "," + 
+                                        messageToEdit[7];
                                 messageList.set(i, newLine);
                                 message.writeMessages(messageList);
                             }
@@ -576,7 +587,8 @@ public class project4 {
                 int minutes = currentTime.getMinute();
                 String time = hours + ":" + minutes;
                 if (size == 0) {
-                    messageList.add(user.getName() + "," + sell + "," + time + "," + "START OF CONVO" + "," + sell + "," + "false," + "false," + "false," + "false");
+                    messageList.add(user.getName() + "," + sell + "," + time + "," + "START OF CONVO" + 
+                                    "," + sell + "," + "false," + "false," + "false," + "false");
                     message.writeMessages(messageList);
                 }
                 for (int x = 0; x < size; x++) {
@@ -1066,28 +1078,29 @@ public class project4 {
             }
 
         } catch (IOException e) {
-                throw new IOException(e);
+            throw new IOException(e);
+        }
+        if (type.equals("seller")) {
+            FileWriter fileWriter = new FileWriter("src/seller.txt");
+            PrintWriter pw = new PrintWriter(fileWriter);
+            for (int i = 0; i < userDetailsList.size(); i++) {
+                pw.println(userDetailsList.get(i));
             }
-            if (type.equals("seller")) {
-                    FileWriter fileWriter = new FileWriter("src/seller.txt");
-                    PrintWriter pw = new PrintWriter(fileWriter);
-                    for (int i = 0; i < userDetailsList.size(); i++) {
-                        pw.println(userDetailsList.get(i));
-                    }
-                    pw.close();
-                } else {
-                    FileWriter fileWriter = new FileWriter("src/customer.txt");
-                    PrintWriter pw = new PrintWriter(fileWriter);
-                    for (int i = 0; i < userDetailsList.size(); i++) {
-                        pw.println(userDetailsList.get(i));
-                    }
-                    pw.close();
-                }
-        if (status == null) {
+            pw.close();
+        } else {
+            FileWriter fileWriter = new FileWriter("src/customer.txt");
+            PrintWriter pw = new PrintWriter(fileWriter);
+            for (int i = 0; i < userDetailsList.size(); i++) {
+                pw.println(userDetailsList.get(i));
+            }
+            pw.close();
+        }
+        return status == null;
+        /*if (status == null) {
             return false;
         } else {
             return true;
-        }
+        }*/
     }
 }
 
@@ -1096,6 +1109,5 @@ public class project4 {
 //    public void writeMessages() {
 //        messageList.writeMessages(messageList);
 //    }
-
 
 
