@@ -689,10 +689,10 @@ public class project4 {
                                 messageList.set(i, newLine);
                                 message.writeMessages(messageList);
                             }
-                            System.out.println("You have blocked " + sell + ". They will no longer be able to send " +
-                                    "or view your messages. However, you can still interact with the messages.");
-                        }
 
+                        }
+                        System.out.println("You have blocked " + sell + ". They will no longer be able to send " +
+                                "or view your messages. However, you can still interact with the messages.");
                         break;
                     case "5":
                         // Have to go through a for loop, and turn the
