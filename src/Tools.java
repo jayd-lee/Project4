@@ -1,5 +1,15 @@
 import java.util.Scanner;
 
+/**
+ * Tools.java
+ *
+ * This class is created to implement some of the other messages since it would clutter the Project4.java
+ *
+ * @author Dhanush Manjunath, Aadi Gupta, Jayden Lee, Kylie Houston, LE2
+ *
+ * @version 4/10/23
+ *
+ */
 public class Tools {
     static Scanner scan = new Scanner(System.in);
 
