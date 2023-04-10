@@ -1,3 +1,5 @@
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.io.*;
 import java.util.SimpleTimeZone;
@@ -6,7 +8,18 @@ import java.util.ArrayList;
 
 
 public class project4 {
+
     static Scanner scan = new Scanner(System.in);
+    private Messages message;
+    private ArrayList<String> messages;
+    private ArrayList<String> stores;
+    private ArrayList<String> sellers;
+    private ArrayList<String> customers;
+
+    public static User user;
+    private static boolean isSeller;
+
+
     public static void main(String[] args) throws IOException {
         System.out.println("Welcome to the chat app!");
         System.out.println("1. Login");
@@ -46,6 +59,17 @@ public class project4 {
                 main(args);
                 break;
         }
+
+        if (isSeller) {
+
+
+        } else {
+
+        }
+
+
+
+
 
     }
 
@@ -100,8 +124,8 @@ public class project4 {
                     System.out.println("Invalid password, try again");
                 }
             }
-
-            Seller seller = new Seller(loginUsername, loginPassword, loginEmail);
+            user = new User(loginUsername, loginPassword, loginEmail);
+            isSeller = true;
 
 
         } else if (choice.equals("2")) {
@@ -152,7 +176,8 @@ public class project4 {
                 }
             }
 
-            Customer customer = new Customer(loginUsername, loginPassword, loginEmail);
+            user = new User(loginUsername, loginPassword, loginEmail);
+            isSeller = false;
 
         } else {
             System.out.println("Thanks for using the chat app!");
@@ -163,8 +188,6 @@ public class project4 {
         String loginUsername = null;
         String loginPassword = null;
         String loginEmail = null;
-
-
 
         if (choice.equals("1")) {
 
@@ -233,7 +256,8 @@ public class project4 {
                 e.printStackTrace();
             }
 
-            Seller seller = new Seller(loginUsername, loginPassword, loginEmail);
+            user = new User(loginUsername, loginPassword, loginEmail);
+            isSeller = true;
 
         } else if (choice.equals("2")) {
             BufferedReader br = null;
@@ -242,7 +266,7 @@ public class project4 {
             ArrayList<String> emailList = new ArrayList<>();
 
             try {
-                br = new BufferedReader(new FileReader("src/seller.txt"));
+                br = new BufferedReader(new FileReader("src/customer.txt"));
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] details = line.split(",");
@@ -268,7 +292,6 @@ public class project4 {
                     }
                 }
             }
-
 
             while (true) {
                 loginEmail = Tools.email();
@@ -300,10 +323,75 @@ public class project4 {
                 e.printStackTrace();
             }
 
-            Customer customer = new Customer(loginUsername, loginPassword, loginEmail);
+            user = new User(loginUsername, loginPassword, loginEmail);
+            isSeller = true;
 
         } else {
             System.out.println("Thanks for using the chat app!");
         }
     }
+
+
+
+    public project4() {
+        message = new Messages();
+        messages = message.getMessages();
+    }
+    public void readStores() {
+
+    }
+    public void readSellers() {
+
+    }
+    public void readCustomers() {
+
+    }
+    public void createMessage(String sender, String receiver, String message) {
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String line = sender + "," + receiver + "," + sdf.format(ts) + "," + message + "," + "false";
+        messages.add(line);
+    }
+
+    public void updateMessage(String sender, String receiver, String message, String newMessage) {
+        String[] line;
+        int index = -1;
+        for(int x = 0; x < messages.size(); x++) {
+            line = messages.get(x).split(",");
+            if (line[0].equalsIgnoreCase(sender) && line[1].equalsIgnoreCase(receiver) && line[3].equalsIgnoreCase(message)) {
+                index = x;
+            }
+        }
+        messages.remove(index);
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String data = sender + "," + receiver + "," + sdf.format(ts) + "," + newMessage + "," + "false";
+        messages.add(data);
+    }
+    public void deleteMessage(String sender, String receiver, String message, String newMessage) {
+        String[] line;
+        int index = -1;
+        String send = "";
+        String receive = "";
+        String time = "";
+        String mess = "";
+        for(int x = 0; x < messages.size(); x++) {
+            line = messages.get(x).split(",");
+            if (line[0].equalsIgnoreCase(sender) && line[1].equalsIgnoreCase(receiver) && line[3].equalsIgnoreCase(message)) {
+                index = x;
+                send = line[0];
+                receive = line[1];
+                time = line[2];
+                mess = line[3];
+            }
+        }
+        messages.remove(index);
+        String data = send + "," + receive + "," + time + "," + mess + "," + "true";
+        messages.add(data);
+    }
+    public void writeMessages() {
+        message.writeMessages(messages);
+    }
 }
+
+
