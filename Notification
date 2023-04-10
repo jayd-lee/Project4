@@ -1,0 +1,24 @@
+public class Notification {
+    private boolean hasNewNotification;
+    private boolean seenNoti;
+
+    public Notification() {
+        this.hasNewNotification = false;
+        this.seenNoti = true;
+    }
+
+    // Call this method to notify the user of a new notification
+    public void notifyNewNotification() {
+        if (!seenNoti) {
+            this.hasNewNotification = true;
+            System.out.println("New Notification buddy");
+        }
+    }
+
+    // Call this method to check if there is a new notification
+    public boolean hasNewNotification() {
+        return this.hasNewNotification;
+    }
+
+    
+}
