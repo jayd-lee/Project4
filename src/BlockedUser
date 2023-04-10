@@ -1,17 +1,23 @@
 import java.util.*;
+import java.io.*;
 
 public class BlockedUser extends User {
     private ArrayList<User> blockedUsers;
     private ArrayList<User> invisibleUsers;
+    private String file = "blockedUsers.txt";
 
     public BlockedUser(String name, String password, String email) {
         super(name, password, email);
         blockedUsers = new ArrayList<User>();
         invisibleUsers = new ArrayList<User>();
+        showBlockedUsers();
+        showInvisibleUsers();
     }
+
 
     public void blocked(User users) {
         blockedUsers.add(users);
+
     }
 
     public void invisible(User users) {
@@ -33,4 +39,61 @@ public class BlockedUser extends User {
     public ArrayList<User> getInvisibleUsers() {
         return invisibleUsers;
     }
+
+    private void showBlockedUsers() {
+        try {
+            File f = new File(file);
+            if (f.exists()) {
+                FileInputStream fs = new FileInputStream(f);
+                ObjectInputStream os = new ObjectInputStream(fs);
+                blockedUsers = (ArrayList<User>) os.readObject();
+                os.close();
+                fs.close();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showInvisibleUsers() {
+        try {
+            File f = new File(file);
+            if (f.exists()) {
+                FileInputStream fs = new FileInputStream(f);
+                ObjectInputStream os = new ObjectInputStream(fs);
+                invisibleUsers = (ArrayList<User>) os.readObject();
+                os.close();
+                fs.close();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveBlockedUsers() {
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(blockedUsers);
+            os.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveInvisibleUsers() {
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(blockedUsers);
+            os.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
+
