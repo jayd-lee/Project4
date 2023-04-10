@@ -1,7 +1,16 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+/**
+ * Files.java
+ *
+ * This program implements the files selection criteria of the project by exporting and importing messages from files.
+ *
+ * @author Dhanush Manjunath, Aadi Gupta, Jayden Lee, Kylie Houston, LE2
+ *
+ * @version 4/10/23
+ *
+ */
 public class Files {
     private String messagePath;
     private String conversationPath;
@@ -54,7 +63,9 @@ public class Files {
                 String[] line = conversationData.get(x).split(",");
                 String send = line[0].trim();
                 String receive = line[1].trim();
-                if ((send.equals(sender) && recipient.equals(receive)) || send.equals(recipient) && recipient.equals(sender)) {
+                boolean one = send.equals(sender) && recipient.equals(receive);
+                boolean two = send.equals(recipient) && recipient.equals(sender);
+                if (one || two) {
                     pw.println(conversationData.get(x));
                 }
             }
