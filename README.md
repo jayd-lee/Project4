@@ -5,7 +5,7 @@
 
 ##### *It is important to understand the TWO different types of branches*
 
-- `Local` branch is the code that shows up in your IntelliJ (VScode if ur a dumbass)
+- `Local` branch is the code that shows up in your IntelliJ (VScode)
 
 - `Remote` branch is the code that shows up on your Github. 
 
