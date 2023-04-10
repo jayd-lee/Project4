@@ -4,32 +4,35 @@ import java.io.*;
 public class BlockedUser extends User {
     private ArrayList<User> blockedUsers;
     private ArrayList<User> invisibleUsers;
-    private String file = "blockedUsers.txt";
+    private String blockedFile;
+    private String invisibleFile;
 
     public BlockedUser(String name, String password, String email) {
         super(name, password, email);
+        blockedFile = name + "_blockedUsers.txt";
+        invisibleFile = name + "_invisibleUsers.txt";
         blockedUsers = new ArrayList<User>();
         invisibleUsers = new ArrayList<User>();
         showBlockedUsers();
         showInvisibleUsers();
     }
 
-
-    public void blocked(User users) {
-        blockedUsers.add(users);
-
+    public void blocked(User user) {
+        blockedUsers.add(user);
+        saveBlockedUsers();
     }
 
-    public void invisible(User users) {
-        invisibleUsers.add(users);
+    public void invisible(User user) {
+        invisibleUsers.add(user);
+        saveInvisibleUsers();
     }
 
-    public boolean isBlocked(User users) {
-        return blockedUsers.contains(users);
+    public boolean isBlocked(User user) {
+        return blockedUsers.contains(user);
     }
 
-    public boolean isInvisible(User users) {
-        return invisibleUsers.contains(users);
+    public boolean isInvisible(User user) {
+        return invisibleUsers.contains(user);
     }
 
     public ArrayList<User> getBlockedUsers() {
@@ -42,7 +45,7 @@ public class BlockedUser extends User {
 
     private void showBlockedUsers() {
         try {
-            File f = new File(file);
+            File f = new File(blockedFile);
             if (f.exists()) {
                 FileInputStream fs = new FileInputStream(f);
                 ObjectInputStream os = new ObjectInputStream(fs);
@@ -51,13 +54,13 @@ public class BlockedUser extends User {
                 fs.close();
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("Error!");
         }
     }
 
     private void showInvisibleUsers() {
         try {
-            File f = new File(file);
+            File f = new File(invisibleFile);
             if (f.exists()) {
                 FileInputStream fs = new FileInputStream(f);
                 ObjectInputStream os = new ObjectInputStream(fs);
@@ -66,34 +69,31 @@ public class BlockedUser extends User {
                 fs.close();
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+             System.err.println("Error Reading!");
         }
     }
 
     private void saveBlockedUsers() {
         try {
-            FileOutputStream fos = new FileOutputStream(file);
+            FileOutputStream fos = new FileOutputStream(blockedFile);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(blockedUsers);
             os.close();
             fos.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error Writing!");
         }
     }
 
     private void saveInvisibleUsers() {
         try {
-            FileOutputStream fos = new FileOutputStream(file);
+            FileOutputStream fos = new FileOutputStream(invisibleFile);
             ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(blockedUsers);
+            os.writeObject(invisibleUsers);
             os.close();
             fos.close();
         } catch (IOException e) {
-            e.printStackTrace();
+             System.err.println("Error Writing!");
         }
     }
-
-
 }
-
