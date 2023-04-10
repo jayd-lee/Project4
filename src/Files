@@ -1,0 +1,92 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Files {
+    private String messagePath;
+    private String conversationPath;
+
+    public Files() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            System.out.println("Enter the file path for message data: ");
+            this.messagePath = reader.readLine();
+            System.out.println("Enter the file path for conversation data: ");
+            this.conversationPath = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<String> readMessage() {
+        ArrayList<String> allMessages = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(messagePath)));
+            String l;
+            while ((l = br.readLine()) != null) {
+                allMessages.add(l);
+                //l = br.readLine();
+            }
+            // br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return allMessages;
+    }
+
+    public void writeMessage(ArrayList<String> messagesNew) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(new File(messagePath)))) {
+            for (String message : messagesNew) {
+                pw.println(message);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void exportConversation(ArrayList<String> conversationData) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(new File(conversationPath)))) {
+            pw.println("Participants,Sender,Timestamp,Contents");
+            for (String data : conversationData) {
+                pw.println(data);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public ArrayList<String[]> readConversation() {
+//        ArrayList<String[]> allConversations = new ArrayList<>();
+//        try (BufferedReader br = new BufferedReader(new FileReader(new File(conversationPath)))) {
+//            String line = br.readLine();
+//            while (line != null) {
+//                String[] conversation = line.split(",");
+//                allConversations.add(conversation);
+//                line = br.readLine();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return allConversations;
+//    }
+
+    public void importText(String recipientName, String textFilePath) {
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(textFilePath)))) {
+            String contents = "";
+            String l = br.readLine();
+            while (l != null) {
+                contents += l + "\n";
+                l = br.readLine();
+            }
+            contents = contents.trim();
+            String timestamp = String.valueOf(System.currentTimeMillis());
+            String message = recipientName + "," + User.getCurrentUser().getName() + "," + timestamp + "," +
+                    contents;
+            ArrayList<String> messages = readMessage();
+            messages.add(message);
+            writeMessage(messages);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
