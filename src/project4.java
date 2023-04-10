@@ -10,11 +10,10 @@ import java.util.ArrayList;
 public class project4 {
 
     static Scanner scan = new Scanner(System.in);
-    private Messages message;
-    private ArrayList<String> messages;
-    private ArrayList<String> stores;
-    private ArrayList<String> sellers;
-    private ArrayList<String> customers;
+    private static ArrayList<String> messageList;
+    private static ArrayList<String> storeList;
+    private static ArrayList<String> sellerList;
+    private static ArrayList<String> customerList;
 
     public static User user;
     private static boolean isSeller;
@@ -60,12 +59,81 @@ public class project4 {
                 break;
         }
 
-        if (isSeller) {
+        Messages message = new Messages();
+        messageList = message.getMessages();
 
+        Customer customer = new Customer();
+        customerList = customer.getCustomers();
+
+        Seller seller = new Seller();
+        sellerList = seller.getSeller();
+
+
+
+        String store = null;
+        String sell = null;
+        String cust = null;
+
+        if (isSeller) {
+            System.out.println("Choose an option");
+            System.out.println("1. List customers to contact");
+            System.out.println("2. Search customer");
+
+            choice = scan.nextLine();
+
+
+            if (choice.equals("1")) {
+                for (int i = 0; i < customerList.size(); i++) {
+                    System.out.println(i + ": " + customerList.get(i));
+                }
+                choice = scan.nextLine();
+                int index = Integer.parseInt(choice);
+                cust = customerList.get(index);
+
+            } else if (choice.equals("2")) {
+
+                while (true) {
+                    System.out.println("Enter customer name: ");
+                    cust = scan.nextLine();
+                    if (customerList.contains(cust)) {
+                        System.out.println("Customer found");
+                        break;
+                    } else {
+                        System.out.println("Customer not found, try again");
+                    }
+                }
+            }
 
         } else {
+            System.out.println("Choose an option");
+            System.out.println("1. List the stores");
+            System.out.println("2. Search customer");
+            choice = scan.nextLine();
 
+
+            if (choice.equals("1")) {
+                for (int i = 0; i < sellerList.size(); i++) {
+                    System.out.println(i + ": " + sellerList.get(i));
+                }
+                choice = scan.nextLine();
+                int index = Integer.parseInt(choice);
+                store = sellerList.get(index);
+
+            } else if (choice.equals("2")) {
+                while (true) {
+                    System.out.println("Enter seller name: ");
+                    sell = scan.nextLine();
+                    if (sellerList.contains(seller)) {
+                        System.out.println("Seller found");
+                        break;
+                    } else {
+                        System.out.println("Seller not found, try again");
+                    }
+                }
+            }
         }
+
+
 
 
 
@@ -248,10 +316,9 @@ public class project4 {
             try {
                 FileWriter fileWriter = new FileWriter("src/seller.txt", true);
                 PrintWriter pw = new PrintWriter(fileWriter);
-                pw.write("\n" + loginUsername + ", " + loginPassword + ", " + loginEmail);
+                pw.println(loginUsername + ", " + loginPassword + ", " + loginEmail);
                 pw.close();
 
-                System.out.println("Data written t successfully.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -316,7 +383,7 @@ public class project4 {
             try {
                 FileWriter fileWriter = new FileWriter("src/customer.txt", true);
                 PrintWriter pw = new PrintWriter(fileWriter);
-                pw.write("\n" + loginUsername + ", " + loginPassword + ", " + loginEmail);
+                pw.println(loginUsername + ", " + loginPassword + ", " + loginEmail);
                 pw.close();
 
             } catch (IOException e) {
@@ -333,10 +400,6 @@ public class project4 {
 
 
 
-    public project4() {
-        message = new Messages();
-        messages = message.getMessages();
-    }
     public void readStores() {
 
     }
@@ -350,23 +413,23 @@ public class project4 {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String line = sender + "," + receiver + "," + sdf.format(ts) + "," + message + "," + "false";
-        messages.add(line);
+        messageList.add(line);
     }
 
     public void updateMessage(String sender, String receiver, String message, String newMessage) {
         String[] line;
         int index = -1;
-        for(int x = 0; x < messages.size(); x++) {
-            line = messages.get(x).split(",");
+        for(int x = 0; x < messageList.size(); x++) {
+            line = messageList.get(x).split(",");
             if (line[0].equalsIgnoreCase(sender) && line[1].equalsIgnoreCase(receiver) && line[3].equalsIgnoreCase(message)) {
                 index = x;
             }
         }
-        messages.remove(index);
+        messageList.remove(index);
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String data = sender + "," + receiver + "," + sdf.format(ts) + "," + newMessage + "," + "false";
-        messages.add(data);
+        messageList.add(data);
     }
     public void deleteMessage(String sender, String receiver, String message, String newMessage) {
         String[] line;
@@ -375,8 +438,8 @@ public class project4 {
         String receive = "";
         String time = "";
         String mess = "";
-        for(int x = 0; x < messages.size(); x++) {
-            line = messages.get(x).split(",");
+        for(int x = 0; x < messageList.size(); x++) {
+            line = messageList.get(x).split(",");
             if (line[0].equalsIgnoreCase(sender) && line[1].equalsIgnoreCase(receiver) && line[3].equalsIgnoreCase(message)) {
                 index = x;
                 send = line[0];
@@ -385,13 +448,13 @@ public class project4 {
                 mess = line[3];
             }
         }
-        messages.remove(index);
+        messageList.remove(index);
         String data = send + "," + receive + "," + time + "," + mess + "," + "true";
-        messages.add(data);
+        messageList.add(data);
     }
-    public void writeMessages() {
-        message.writeMessages(messages);
-    }
+//    public void writeMessages() {
+//        messageList.writeMessages(messageList);
+//    }
 }
 
 
