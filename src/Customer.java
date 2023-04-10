@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.io.*;
 
 public class Customer {
-    private ArrayList<String> customers;
+    private ArrayList<String> customers = new ArrayList<String>();
     public Customer() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File("src/customer.txt")));
