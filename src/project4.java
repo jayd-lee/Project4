@@ -284,7 +284,9 @@ public class project4 {
                 System.out.println("3. Delete");
                 System.out.println("4. Block");
                 System.out.println("5. Invisible");
-                System.out.println("6. Exit");
+                System.out.println("6. Import Messages");
+                System.out.println("7. Export Messages");
+                System.out.println("8. Exit");
 
                 choice = scan.nextLine();
 
@@ -408,6 +410,15 @@ public class project4 {
                                 "your store or your account.");
                         break;
                     case "6":
+                        Files file = new Files(6);
+                        String mess = file.importText(user.getName(), cust);
+                        messageList.add(mess);
+                        message.writeMessages(messageList);
+                        break;
+                    case "7":
+                        Files f = new Files(7);
+                        f.exportConversation(messageList, user.getName(), cust);
+                    case "8":
                         System.out.println("Thanks for using the messaging system!");
                         return;
                 }
@@ -542,6 +553,7 @@ public class project4 {
                     return;
                 } else {
                     System.out.println("Invalid input");
+                    invalid = true;
                 }
             } while (invalid);
 
@@ -586,7 +598,9 @@ public class project4 {
                 System.out.println("3. Delete");
                 System.out.println("4. Block");
                 System.out.println("5. Invisible");
-                System.out.println("6. Exit");
+                System.out.println("6. Import Messages");
+                System.out.println("7. Export Messages");
+                System.out.println("8. Exit");
                 choice = scan.nextLine();
 
                 switch (choice) {
@@ -707,8 +721,16 @@ public class project4 {
                         System.out.println("Now invisible to " + sell);
                         break;
                     case "6":
+                        Files file = new Files(6);
+                        String mess = file.importText(user.getName(), sell);
+                        messageList.add(mess);
+                        message.writeMessages(messageList);
+                        break;
+                    case "7":
+                        Files f = new Files(7);
+                        f.exportConversation(messageList, user.getName(), sell);
+                    case "8":
                         System.out.println("Thanks for using the messaging system!");
-                        System.out.println("Goodbye!");
                         return;
                 }
             }
