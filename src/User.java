@@ -1,3 +1,13 @@
+/**
+ * User.java
+ *
+ * Stores the name, password, and email of the person logging into the system
+ *
+ * @author Dhanush Manjunath, Aadi Gupta, Jayden Lee, Kylie Houston, LE2
+ *
+ * @version 4/10/23
+ *
+ */
 public class User {
     private String name;
     private String password;
