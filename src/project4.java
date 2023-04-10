@@ -96,7 +96,7 @@ public class project4 {
         boolean invalid = false;
         if (isSeller) {
             int size = (messageList != null) ? messageList.size() : 0;
-            for(int x = 0; x < size; x++) {
+            for (int x = 0; x < size; x++) {
 
             /*
             0. Sender
@@ -154,7 +154,8 @@ public class project4 {
                 System.out.println("1. List customers to contact");
                 System.out.println("2. Search customer");
                 System.out.println("3. Add store");
-                System.out.println("4. Exit");
+                System.out.println("4. Edit account");
+                System.out.println("5. Exit");
                 choice = scan.nextLine();
                 if (choice.equals("1")) {
                     size = (customerList != null) ? customerList.size() : 0;
@@ -209,7 +210,7 @@ public class project4 {
                             }
 
                         }
-                        invalid = false;
+                        break;
                     }
 
                 } else if (choice.equals("3")) {
@@ -219,7 +220,21 @@ public class project4 {
                     store.writeStores(storeList);
                     invalid = true;
                     System.out.println("Store added!");
+
                 } else if (choice.equals("4")) {
+                    String type = "seller";
+                    boolean isdelete = edit(user.getName(), type);
+
+                    if (isdelete) {
+                        System.out.println("Account deleted!");
+                        return;
+                    } else {
+                        System.out.println("Account edited!");
+                        invalid = true;
+                    }
+
+
+                } else if (choice.equals("5")) {
                     System.out.println("Thank you for using the chat app!");
                     return;
 
@@ -240,8 +255,6 @@ public class project4 {
             }
 
 
-
-
             while (true) {
                 System.out.println("Message history:");
                 size = (messageList != null) ? messageList.size() : 0;
@@ -253,8 +266,8 @@ public class project4 {
                     messageList.add(user.getName() + "," + cust + "," + time + "," + "START OF CONVO" + "," + "false," + "false," + "false," + "false");
                     message.writeMessages(messageList);
                 }
-                for(int x = 0; x < size; x++) {
-                    if(messageList.get(x).contains(cust) && messageList.get(x).contains(user.getName())) {
+                for (int x = 0; x < size; x++) {
+                    if (messageList.get(x).contains(cust) && messageList.get(x).contains(user.getName())) {
                         String[] line = messageList.get(x).split(",");
                         String send = line[0].trim();
                         String receive = line[1].trim();
@@ -391,7 +404,7 @@ public class project4 {
                             }
 
                         }
-                        System.out.println("Now invisible to " + cust +"." + " They will no longer be able to see " +
+                        System.out.println("Now invisible to " + cust + "." + " They will no longer be able to see " +
                                 "your store or your account.");
                         break;
                     case "6":
@@ -405,7 +418,7 @@ public class project4 {
             /* CUSTOMER OPTIONS */
         } else {
             int size = (messageList != null) ? messageList.size() : 0;
-            for(int x = 0; x < size; x++) {
+            for (int x = 0; x < size; x++) {
             /*
             0. Sender
             1. Receiver
@@ -456,68 +469,81 @@ public class project4 {
                 }
 
             }
+            do {
+                System.out.println("Choose an option");
+                System.out.println("1. List the stores");
+                System.out.println("2. Search seller");
+                System.out.println("3. Edit Account");
+                System.out.println("4. exit");
+                choice = scan.nextLine();
 
-            System.out.println("Choose an option");
-            System.out.println("1. List the stores");
-            System.out.println("2. Search seller");
-            System.out.println("3. exit");
-            choice = scan.nextLine();
-
-            if (choice.equals("1")) {
-                size = (storeList != null) ? storeList.size() : 0;
-                if (storeList.size() == size) {
-                    System.out.println("No stores found");
-                    return;
-                }
-                System.out.println("Enter store number: ");
-                for (int i = 0; i < size; i++) {
-                    if (!invisibleByList.contains(storeList.get(i).split(",")[1])) {
-                        System.out.println((i + 1) + ": " + storeList.get(i).split(",")[0]);
+                if (choice.equals("1")) {
+                    size = (storeList != null) ? storeList.size() : 0;
+                    if (storeList.size() == size) {
+                        System.out.println("No stores found");
+                        return;
                     }
-                }
-
-                while (true) {
-                    choice = scan.nextLine();
-                    int index = Integer.parseInt(choice);
-                    storeName = storeList.get(index - 1);
-
-                    String[] storeNameList = storeName.split(",");
-                    sell = storeNameList[1];
-                    if (blockedMeList.contains(sell)) {
-                        System.out.println("This customer blocked you. " +
-                                "You cannot send messages to this customer, choose another customer");
-                    } else {
-                        System.out.println(sell + " is the owner of " + storeNameList[0]);
-                        System.out.println("Connecting to " + sell + "...");
-                        break;
+                    System.out.println("Enter store number: ");
+                    for (int i = 0; i < size; i++) {
+                        if (!invisibleByList.contains(storeList.get(i).split(",")[1])) {
+                            System.out.println((i + 1) + ": " + storeList.get(i).split(",")[0]);
+                        }
                     }
-                }
-            } else if (choice.equals("2")) {
-                while (true) {
-                    System.out.println("Enter seller name: ");
-                    sell = scan.nextLine();
-                    //abcdefg
-                    if (invisibleByList.contains(sell)) {
-                        System.out.println("No seller found");
-                    } else if ((sellerList.contains(sell)) && (!invisibleByList.contains(sell))) {
-                        System.out.println("Seller found");
 
+                    while (true) {
+                        choice = scan.nextLine();
+                        int index = Integer.parseInt(choice);
+                        storeName = storeList.get(index - 1);
+
+                        String[] storeNameList = storeName.split(",");
+                        sell = storeNameList[1];
                         if (blockedMeList.contains(sell)) {
                             System.out.println("This customer blocked you. " +
                                     "You cannot send messages to this customer, choose another customer");
                         } else {
+                            System.out.println(sell + " is the owner of " + storeNameList[0]);
+                            System.out.println("Connecting to " + sell + "...");
                             break;
                         }
-                    } else {
-                        System.out.println("Seller not found, try again");
                     }
+                } else if (choice.equals("2")) {
+                    while (true) {
+                        System.out.println("Enter seller name: ");
+                        sell = scan.nextLine();
+                        //abcdefg
+                        if (invisibleByList.contains(sell)) {
+                            System.out.println("No seller found");
+                        } else if ((sellerList.contains(sell)) && (!invisibleByList.contains(sell))) {
+                            System.out.println("Seller found");
+
+                            if (blockedMeList.contains(sell)) {
+                                System.out.println("This customer blocked you. " +
+                                        "You cannot send messages to this customer, choose another customer");
+                            } else {
+                                break;
+                            }
+                        } else {
+                            System.out.println("Seller not found, try again");
+                        }
+                    }
+                } else if (choice.equals("3")) {
+                    String type = "customer";
+                    boolean isdelete = edit(user.getName(), type);
+                    if (isdelete) {
+                        System.out.println("Account deleted!");
+                        return;
+                    } else {
+                        System.out.println("Account edited!");
+                        invalid = true;
+                    }
+
+                } else if (choice.equals("4")) {
+                    System.out.println("Thanks for using the messaging system!");
+                    return;
+                } else {
+                    System.out.println("Invalid input");
                 }
-            } else if (choice.equals("3")) {
-                System.out.println("Thanks for using the messaging system!");
-                return;
-            } else {
-                System.out.println("Invalid input");
-            }
+            } while (invalid);
 
             if (blockedList.contains(sell)) {
                 System.out.println("You blocked this seller, you can still view, send, " +
@@ -528,8 +554,6 @@ public class project4 {
                 System.out.println("You are invisible to this seller, you can still view, send, " +
                         "edit messages but they will not be able to see your messages.");
             }
-
-
 
 
             while (true) {
@@ -543,8 +567,8 @@ public class project4 {
                     messageList.add(user.getName() + "," + sell + "," + time + "," + "START OF CONVO" + "," + sell + "," + "false," + "false," + "false," + "false");
                     message.writeMessages(messageList);
                 }
-                for(int x = 0; x < size; x++) {
-                    if(messageList.get(x).contains(sell) && messageList.get(x).contains(user.getName())) {
+                for (int x = 0; x < size; x++) {
+                    if (messageList.get(x).contains(sell) && messageList.get(x).contains(user.getName())) {
                         String[] line = messageList.get(x).split(",");
                         String send = line[0].trim();
                         String receive = line[1].trim();
@@ -735,7 +759,7 @@ public class project4 {
                 }
             }
 
-            while(true) {
+            while (true) {
                 if (Tools.password().equals(loginPassword)) {
                     System.out.println("Login successful");
                     break;
@@ -786,7 +810,7 @@ public class project4 {
                 }
             }
 
-            while(true) {
+            while (true) {
                 if (Tools.password().equals(loginPassword)) {
                     System.out.println("Login successful");
                     break;
@@ -949,10 +973,107 @@ public class project4 {
         }
     }
 
+    public static boolean edit(String username, String type) throws IOException {
+        ArrayList<String> userDetailsList = new ArrayList<>();
+        ArrayList<String> userNameList = new ArrayList<>();
+        ArrayList<String> passwordList = new ArrayList<>();
+        ArrayList<String> emailList = new ArrayList<>();
+        String loginUsername = null;
+        String loginPassword = null;
+        String loginEmail = null;
+        String status = null;
+        System.out.println("Edit account options:");
+        System.out.println("1. Change username");
+        System.out.println("2. Change email");
+        System.out.println("3. Change password");
+        System.out.println("4. Delete account");
+        String choice = scan.nextLine();
+        BufferedReader br = null;
+
+        try {
+            if (type.equals("seller")) {
+                br = new BufferedReader(new FileReader("src/seller.txt"));
+            } else {
+                br = new BufferedReader(new FileReader("src/customer.txt"));
+            }
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] seperate = line.split(",");
+                userNameList.add(seperate[0].trim());
+                passwordList.add(seperate[1].trim());
+                emailList.add(seperate[2].trim());
+                userDetailsList.add(line);
+            }
+            for (int i = 0; i < userDetailsList.size(); i++) {
+                String[] details = userDetailsList.get(i).split(",");
+                if (details[0].trim().equals(username)) {
+                    if (choice.equals("1")) {
+                        while (true) {
+                            System.out.println("Enter new username: ");
+                            String newUsername = scan.nextLine();
+                            if (userNameList.contains(newUsername)) {
+                                System.out.println("Username already exists. Please try again.");
+                            } else {
+                                userDetailsList.set(i, newUsername + "," + details[1].trim() + "," + details[2].trim());
+                                user.setName(newUsername);
+                                break;
+                            }
+                        }
+                    } else if (choice.equals("2")) {
+                        while (true) {
+                            System.out.println("Enter new email: ");
+                            String newEmail = scan.nextLine();
+                            if (emailList.contains(newEmail)) {
+                                System.out.println("Email already exists. Please try again.");
+                            } else {
+                                userDetailsList.set(i, details[0].trim() + "," + details[1].trim() + "," + newEmail);
+                                break;
+                            }
+                        }
+                    } else if (choice.equals("3")) {
+                        System.out.println("Enter new password: ");
+                        String newPassword = scan.nextLine();
+                        userDetailsList.set(i, details[0].trim() + "," + newPassword + "," + details[2].trim());
+                    } else if (choice.equals("4")) {
+                        userDetailsList.remove(i);
+                        status = "deleted";
+                        i--; // Decrement the index to account for removed element
+                        break; // Exit the loop as account is deleted
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+                throw new IOException(e);
+            }
+            if (type.equals("seller")) {
+                    FileWriter fileWriter = new FileWriter("src/seller.txt");
+                    PrintWriter pw = new PrintWriter(fileWriter);
+                    for (int i = 0; i < userDetailsList.size(); i++) {
+                        pw.println(userDetailsList.get(i));
+                    }
+                    pw.close();
+                } else {
+                    FileWriter fileWriter = new FileWriter("src/customer.txt");
+                    PrintWriter pw = new PrintWriter(fileWriter);
+                    for (int i = 0; i < userDetailsList.size(); i++) {
+                        pw.println(userDetailsList.get(i));
+                    }
+                    pw.close();
+                }
+        if (status == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+
 
 //    public void writeMessages() {
 //        messageList.writeMessages(messageList);
 //    }
-}
+
 
 
