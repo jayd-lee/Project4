@@ -9,9 +9,9 @@ public class Files {
     public Files() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
-            System.out.println("Enter the file path for message data: ");
+            System.out.println("Enter the file path for messages: ");
             this.messagePath = reader.readLine();
-            System.out.println("Enter the file path for conversation data: ");
+            System.out.println("Enter the file path for conversations: ");
             this.conversationPath = reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -25,7 +25,7 @@ public class Files {
             String l;
             while ((l = br.readLine()) != null) {
                 allMessages.add(l);
-                //l = br.readLine();
+        
             }
             // br.close();
         } catch (IOException e) {
@@ -39,6 +39,7 @@ public class Files {
             for (String message : messagesNew) {
                 pw.println(message);
             }
+            pw.close(); 
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,22 +56,22 @@ public class Files {
         }
     }
 
-//    public ArrayList<String[]> readConversation() {
-//        ArrayList<String[]> allConversations = new ArrayList<>();
-//        try (BufferedReader br = new BufferedReader(new FileReader(new File(conversationPath)))) {
-//            String line = br.readLine();
-//            while (line != null) {
-//                String[] conversation = line.split(",");
-//                allConversations.add(conversation);
-//                line = br.readLine();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return allConversations;
-//    }
+    public ArrayList<String[]> readConversation() {
+        ArrayList<String[]> allConversations = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(conversationPath)))) {
+            String line = br.readLine();
+            while (line != null) {
+                String[] conversation = line.split(",");
+                allConversations.add(conversation);
+                line = br.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return allConversations;
+    }
 
-    public void importText(String recipientName, String textFilePath) {
+    public void importText(String recipientName, String Sender, String textFilePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(new File(textFilePath)))) {
             String contents = "";
             String l = br.readLine();
