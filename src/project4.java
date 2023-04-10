@@ -2,6 +2,8 @@ import java.util.Scanner;
 import java.io.*;
 import java.util.SimpleTimeZone;
 import java.util.TreeMap;
+import java.util.ArrayList;
+
 
 public class project4 {
     static Scanner scan = new Scanner(System.in);
@@ -32,9 +34,7 @@ public class project4 {
                 do {
                     choice = scan.nextLine();
                 } while (!choice.equals("3") && !choice.equals("2") && !choice.equals("1"));
-
                 signup(choice);
-
                 break;
 
             case "3":
@@ -164,120 +164,146 @@ public class project4 {
         String loginPassword = null;
         String loginEmail = null;
 
+
+
         if (choice.equals("1")) {
-            boolean emailExists = true;
+
             BufferedReader br = null;
+            ArrayList<String> usernameList = new ArrayList<>();
+            ArrayList<String> passwordList = new ArrayList<>();
+            ArrayList<String> emailList = new ArrayList<>();
 
-            while (emailExists) {
-                try {
-                    br = new BufferedReader(new FileReader("src/seller.txt"));
-                    String line;
-                    String email = Tools.email();
+            try {
+                br = new BufferedReader(new FileReader("src/seller.txt"));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] details = line.split(",");
+                    loginUsername = details[0].trim();
+                    loginPassword = details[1].trim();
+                    loginEmail = details[2].trim();
 
-                    while ((line = br.readLine()) != null) {
-                        if (line.contains(email)) {
-                            String[] details = line.split(",");
-                            loginUsername = details[0].trim();
-                            loginEmail = details[2].trim();
-                            break;
-                        }
-                    }
-                    if (loginUsername == null) {
-                        emailExists = false;
-                    }
+                    usernameList.add(loginUsername);
+                    passwordList.add(loginPassword);
+                    emailList.add(loginEmail);
+                }
 
-                } catch (IOException e) {
-                    System.out.println("Error reading file: " + e.getMessage());
-                    e.printStackTrace();
-                } finally {
-                    if (br != null) {
-                        try {
-                            br.close();
-                        } catch (IOException e) {
-                            System.out.println("Error closing file: " + e.getMessage());
-                            e.printStackTrace();
-                        }
+            } catch (IOException e) {
+                System.out.println("Error reading file: " + e.getMessage());
+                e.printStackTrace();
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        System.out.println("Error closing file: " + e.getMessage());
+                        e.printStackTrace();
                     }
                 }
             }
 
-            while(true) {
-                String username = Tools.username();
-                if (loginUsername == username) {
+
+            while (true) {
+                loginEmail = Tools.email();
+                if (emailList.contains(loginEmail)) {
+                    System.out.println("Email already exists. Please try again.");
+                } else {
+                    break;
+                }
+            }
+
+            while (true) {
+                loginUsername = Tools.username();
+                if (usernameList.contains(loginUsername)) {
                     System.out.println("Username already exists. Please try again.");
                 } else {
-                    loginUsername = username;
                     break;
                 }
             }
 
             loginPassword = Tools.password();
 
+            try {
+                FileWriter fileWriter = new FileWriter("src/seller.txt", true);
+                PrintWriter pw = new PrintWriter(fileWriter);
+                pw.write("\n" + loginUsername + ", " + loginPassword + ", " + loginEmail);
+                pw.close();
+
+                System.out.println("Data written t successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             Seller seller = new Seller(loginUsername, loginPassword, loginEmail);
-
-
 
         } else if (choice.equals("2")) {
-            boolean emailExists = true;
             BufferedReader br = null;
+            ArrayList<String> usernameList = new ArrayList<>();
+            ArrayList<String> passwordList = new ArrayList<>();
+            ArrayList<String> emailList = new ArrayList<>();
 
-            while (emailExists) {
-                try {
-                    br = new BufferedReader(new FileReader("src/seller.txt"));
-                    String line;
-                    String email = Tools.email();
+            try {
+                br = new BufferedReader(new FileReader("src/seller.txt"));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] details = line.split(",");
+                    loginUsername = details[0].trim();
+                    loginPassword = details[1].trim();
+                    loginEmail = details[2].trim();
 
-                    while ((line = br.readLine()) != null) {
-                        if (line.contains(email)) {
-                            String[] details = line.split(",");
-                            loginUsername = details[0].trim();
-                            loginEmail = details[2].trim();
-                            break;
-                        }
-                    }
-                    if (loginUsername == null) {
-                        emailExists = false;
-                    }
+                    usernameList.add(loginUsername);
+                    passwordList.add(loginPassword);
+                    emailList.add(loginEmail);
+                }
 
-                } catch (IOException e) {
-                    System.out.println("Error reading file: " + e.getMessage());
-                    e.printStackTrace();
-                } finally {
-                    if (br != null) {
-                        try {
-                            br.close();
-                        } catch (IOException e) {
-                            System.out.println("Error closing file: " + e.getMessage());
-                            e.printStackTrace();
-                        }
+            } catch (IOException e) {
+                System.out.println("Error reading file: " + e.getMessage());
+                e.printStackTrace();
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        System.out.println("Error closing file: " + e.getMessage());
+                        e.printStackTrace();
                     }
                 }
             }
 
-            while(true) {
-                String username = Tools.username();
-                if (loginUsername == username) {
+
+            while (true) {
+                loginEmail = Tools.email();
+                if (emailList.contains(loginEmail)) {
+                    System.out.println("Email already exists. Please try again.");
+                } else {
+                    break;
+                }
+            }
+
+            while (true) {
+                loginUsername = Tools.username();
+                if (usernameList.contains(loginUsername)) {
                     System.out.println("Username already exists. Please try again.");
                 } else {
-                    loginUsername = username;
                     break;
                 }
             }
 
             loginPassword = Tools.password();
 
+            try {
+                FileWriter fileWriter = new FileWriter("src/customer.txt", true);
+                PrintWriter pw = new PrintWriter(fileWriter);
+                pw.write("\n" + loginUsername + ", " + loginPassword + ", " + loginEmail);
+                pw.close();
 
-            Seller seller = new Seller(loginUsername, loginPassword, loginEmail);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
+            Customer customer = new Customer(loginUsername, loginPassword, loginEmail);
 
         } else {
             System.out.println("Thanks for using the chat app!");
         }
-
-
     }
-
-
-
 }
